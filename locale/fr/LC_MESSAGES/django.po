@@ -1,0 +1,108 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-05-22 17:31+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: apps.py:6 templates/linkcat/index.html:8 templates/linkcat/index.html.py:22
+msgid "Links catalog"
+msgstr "Catalogue de liens"
+
+#: models.py:10
+msgid "Url"
+msgstr "Url"
+
+#: models.py:11
+msgid "Name"
+msgstr "Nom"
+
+#: models.py:12
+msgid "Description"
+msgstr "Description"
+
+#: models.py:13
+msgid "Category"
+msgstr "Catégorie"
+
+#: models.py:16
+msgid "Link"
+msgstr "Lien"
+
+#: models.py:17
+msgid "Links"
+msgstr "Liens"
+
+#: templates/linkcat/add_link_form.html:60
+msgid "Save"
+msgstr "Enregistrer"
+
+#: templates/linkcat/add_link_success_message.html:7
+msgid "Ok, reload"
+msgstr "Ok, recharger"
+
+#: templates/linkcat/add_link_success_message.html:9
+#: templates/linkcat/add_link_success_message.html:11
+msgid "Ok"
+msgstr "Ok"
+
+#: templates/linkcat/breadcrumbs.html:4
+msgid "Home"
+msgstr "Accueil"
+
+#: templates/linkcat/index.html:35
+msgid "There are no categories yet"
+msgstr "Il n'y a pas encore de catégories"
+
+#: templates/linkcat/list.html:14 templates/linkcat/list.html.py:19
+msgid "links"
+msgstr "liens"
+
+#: templates/linkcat/list.html:25
+msgid "Add link"
+msgstr "Ajouter un lien"
+
+#: templates/linkcat/list.html:40
+msgid "No links yet"
+msgstr "Pas encore de liens"
+
+#: templates/linkcat/paginate.html:6
+msgid "Previous"
+msgstr "Précédent"
+
+#: templates/linkcat/paginate.html:10
+msgid "Next"
+msgstr "Suivant"
+
+#: views.py:85
+msgid "Please provide an url"
+msgstr "Merci de fournir une url"
+
+#: views.py:88 views.py:110
+msgid "Please provide a name for the link"
+msgstr "Merci de fournir un nom pour ce lien"
+
+#: views.py:98
+msgid "Link posted"
+msgstr "Lien posté"
+
+#: views.py:101
+msgid "Link saved for moderation. Thank you for your participation"
+msgstr "Lien enregistré pour modération. Merci de votre participation"
+
+#: views.py:107
+msgid "Please provide a valid url"
+msgstr "Merci de fournir une url valide"

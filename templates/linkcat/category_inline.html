@@ -1,0 +1,22 @@
+{% load thumbnail staticfiles %}
+
+<div class="category_inline">
+	<div>
+		{% if leaf %}
+			<a href="{% url 'links-list' category.slug %}">
+		{% else %}
+			<a href="{% url 'links-category-list' category.slug %}">
+		{% endif %}
+		{% thumbnail category.image "200x200" format="PNG" as img %}
+			<img src="{{ img.url }}" alt="" style="margin:{{ img|margin:"200x200" }}" />
+		{% endthumbnail %}
+		</a>
+	</div>
+	<p class="gbf">
+		{% if leaf %}
+			<a href="{% url 'links-list' category.slug %}">{{ category.name }}</a>
+		{% else %}
+			<a href="{% url 'links-category-list' category.slug %}">{{ category.name }}</a>
+		{% endif %}
+	</p>
+</div>

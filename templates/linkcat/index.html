@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load i18n staticfiles %}
+
+{% block extra_head %}
+	<link rel="stylesheet" media="screen, projection" href="{% static 'linkcat/linkcat.css' %}" />
+{% endblock extra_head %}
+ 
+{% block title %}{% trans 'Links catalog' %}{% endblock title %}
+ 
+{% block content %}
+<div class="container">
+		<div class="row">
+			<div class="col-xs-12">
+				{% with current_category as category %}
+					{% include 'linkcat/breadcrumbs.html' %}
+				{% endwith %}
+			</div>
+		</div>
+	</div>
+ <div class="row">
+	<div class="col-xs-12 text-center">
+		<h1>{% trans 'Links catalog' %}</h1>
+	    <a name="main_content"></a>
+	    {% if categories %}
+		    {% for category in categories %}
+	            {% if category.is_leaf_node %}
+	            	{% with leaf=True %}
+	             		{% include 'linkcat/category_inline.html' %}
+	             	{% endwith %}
+		        {% else %}
+		        	{% include 'linkcat/category_inline.html' %}
+		        {% endif %}
+		    {% endfor %}
+		{% else %}
+			<div class="jumbotron text-center gbf">{% trans "There are no categories yet" %}</div>
+		{% endif %}
+	</div>
+</div>
+{% endblock content %}
