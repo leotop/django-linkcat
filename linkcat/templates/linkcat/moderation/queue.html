@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load staticfiles i18n thumbnail %}
+
+{% block title %}{% trans 'Moderation queue' %}{% endblock %}
+{% block extra_head %}
+	<link rel="stylesheet" media="screen, projection" href="{% static 'linkcat/linkcat.css' %}" />
+	<script type="text/javascript" src="{% static 'linkcat/linkcat.js' %}"></script>
+{% endblock extra_head %}
+
+{% block content %}
+	<div class="label label-info visible-xxs" style="font-size:100%">{{ links|length }} {% trans 'links to moderate' %}</div>
+	<a name="main_content"></a>
+	<div class="row">
+		<div class="col-xs-12 col-md-offset-1 col-md-10 col-md-offset-1 col-lg-offset-2 col-lg-8 col-lg-offset-2">
+			<h1 class="gds"><i class="fa fa-server"></i>&nbsp;{% trans 'Moderation queue' %}</h1>
+			{% if links|length > 0 %}
+			    <ul class="list-group">
+				    {% for link in links %}
+				        {% include 'linkcat/moderation/link_inline.html' %}
+				    {% endfor %}
+				</ul>
+			{% else %}
+				<div class="jumbotron text-center gbf">{% trans "Nothing to moderate" %}</div>
+			{% endif %}
+			<div class="gus-l gf text-center">{% include "linkcat/moderation/paginate.html" %}</div>
+			<div class="hidden-xs">{% include 'mbase/return_btn.html' %}</div>
+			<div class="visible-xs gds-md">{% include 'mbase/return_btn.html' %}</div>
+		</div>
+	</div>
+{% endblock %}
+

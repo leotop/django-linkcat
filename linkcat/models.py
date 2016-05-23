@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
+from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 from mcat.models import Category
 from mbase.models import MetaBaseModel, MetaBasePostedByModel, MetaBaseStatusModel
@@ -19,3 +20,14 @@ class Link(MetaBaseModel, MetaBaseStatusModel, MetaBasePostedByModel):
 
     def __unicode__(self):
         return unicode(self.url)
+    
+    def __str__(self):
+        return self.url.encode('utf8')
+    
+    def get_absolute_url(self):
+        return reverse('links-list', kwargs={'slug':self.category.slug})
+    
+    def save(self, *args, **kwargs):
+        # limit the number of caracters for description
+        self.description = self.description[:350]
+        return super(Link, self).save(*args, **kwargs)

@@ -1,0 +1,8 @@
+{% load i18n %}
+{% if action == 'accept' %}
+	<a class="btn btn-default" href="javascript:load_url('#link_{{ id }}', '{% url 'links-moderate-link-confirm' id=id action='reject' %}')">{% trans 'Cancel' %}</a>
+	<a class="btn btn-success" href="javascript:load_url('#link_{{ id }}', '{% url 'links-moderate-link' id=id action='accept' %}')">{% trans 'Ok save' %}</a>
+{% elif action == 'reject' %} 
+	<a class="btn btn-default" href="javascript:load_url('#link_{{ id }}', '{% url 'links-moderate-link-confirm' id=id action='accept' %}')">{% trans 'Cancel' %}</a>
+	<a class="btn btn-danger" href="javascript:load_url('#link_{{ id }}', '{% url 'links-moderate-link' id=id action='accept' %}')">{% trans 'Ok delete' %}</a> 
+{% endif %}

@@ -17,3 +17,7 @@ function toggle_add_link(url) {
 	$('#add-link-btn-a').attr('href', new_url);
 }
 
+function load_url(block, url) {
+	$(block).load(url);
+}
+

@@ -1,7 +1,7 @@
 {% load i18n %}
 
 <ul class="breadcrumb">
-	<li><a href="">{% trans 'Home' %}</a></li>
+	<li><a href="{% url 'links-home' %}">{% trans 'Home' %}</a></li>
 	{% for node in ancestors %}
 		<li><a href="{% url 'links-category-list' node.slug %}">{{ node.name }}</a></li>
 	{% endfor %}

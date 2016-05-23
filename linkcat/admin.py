@@ -12,3 +12,7 @@ class LinkAdmin(admin.ModelAdmin):
     list_display = ['url', 'category', 'posted_by', 'created', 'edited', 'status']
     list_select_related = ['editor', 'posted_by']
     search_fields = ['url', 'posted_by__username', 'editor__username']
+    
+    def save_model(self, request, obj, form, change):
+        obj.editor = obj.posted_by = request.user
+        return super(LinkAdmin, self).save_model(request, obj, form, change)

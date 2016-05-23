@@ -1,0 +1,19 @@
+{% load i18n %}
+<li id="link_element_{{ link.pk }}" class="list-group-item link_inline">
+	<div class="row">
+		<div class="col-xs-12 col-sm-8">
+			<div>
+				<a href="{{ link.url }}">{{ link.name }} </a>{% if link.description %} : {{ link.description|lower }}{% endif %}
+			</div>
+			<div class="gus" style="font-size:90%">
+				{% trans 'Category' %}: <a href="{{ link.get_absolute_url }}">{{ link.category.name }}</a> - 
+				{% trans 'Posted by' %}: <a href="{% url 'admin:auth_user_change' link.posted_by.id %}">{{ link.posted_by.username }}</a> - 
+				{{ link.created }}
+			</div>
+		</div>
+		<div id="link_{{ link.pk }}" class="col-xs-12 col-sm-4 text-right center-xs gus" style="vertical-align:bottom">
+			<a class="btn btn-warning" href="javascript:load_url('#link_{{ link.pk }}', '{% url 'links-moderate-link-confirm' id=link.pk action='reject' %}')">{% trans 'Reject link' %}</a>
+			<a class="btn btn-success" href="javascript:load_url('#link_{{ link.pk }}', '{% url 'links-moderate-link-confirm' id=link.pk action='accept' %}')">{% trans 'Accept link' %}</a> 			 
+		</div>
+	</div>
+</li>

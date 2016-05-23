@@ -20,6 +20,14 @@
  <div class="row">
 	<div class="col-xs-12 text-center">
 		<h1>{% trans 'Links catalog' %}</h1>
+		{% if is_moderator %}
+			<div class="gf gc">
+				<a class="btn btn-{% if num_items_in_queue > 0 %}warning{% else %}default{% endif %} gds gus" href="{% url 'links-moderation-queue' %}">
+					<i class="fa fa-server"></i>&nbsp;{% trans 'Moderation queue' %}
+					{% if num_items_in_queue > 0 %}<div class="badge">{{ num_items_in_queue }}</div>{% endif %}
+				</a>
+			</div>
+		{% endif %}
 	    <a name="main_content"></a>
 	    {% if categories %}
 		    {% for category in categories %}

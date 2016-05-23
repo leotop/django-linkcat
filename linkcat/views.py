@@ -10,10 +10,11 @@ from django.views.generic.edit import FormView
 from django.views.decorators.csrf import csrf_protect
 from django.utils.html import strip_tags
 from django.utils.translation import ugettext_lazy as _
+from braces.views import GroupRequiredMixin
 from mcat.models import Category
 from linkcat.models import Link
 from linkcat.forms import AddLinkForm
-from linkcat.conf import PAGINATE_BY, GROUPS_CAN_POST_LINK
+from linkcat.conf import PAGINATE_BY, GROUPS_CAN_POST_LINK, GROUPS_CAN_MODERATE
 
 
 class LinksHomeView(TemplateView):
@@ -22,6 +23,17 @@ class LinksHomeView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(LinksHomeView, self).get_context_data(**kwargs)
         categories = Category.objects.filter(level__lte=0, status=0)
+        is_moderator = False
+        if not self.request.user.is_anonymous():
+            if self.request.user.is_superuser:
+                is_moderator = True
+            else:
+                is_moderator = request.user.groups.filter(name__in=GROUPS_CAN_POST_LINK).exists()
+        num_items_in_queue = 0
+        if is_moderator:
+            num_items_in_queue = Link.objects.filter(status=1).count()
+        context['is_moderator'] = is_moderator
+        context['num_items_in_queue'] = num_items_in_queue
         context['categories'] = categories
         return context
     
@@ -57,6 +69,58 @@ class LinksListView(ListView):
         context['category'] = self.category
         context['ancestors'] = self.category.get_ancestors()
         return context
+
+ 
+class ModerationQueueView(ListView, GroupRequiredMixin):
+    group_required = GROUPS_CAN_MODERATE
+    paginate_by = PAGINATE_BY
+    context_object_name = 'links'
+    template_name = 'linkcat/moderation/queue.html'
+    
+    def get_queryset(self):
+        qs = Link.objects.filter(status=1).select_related('category', 'posted_by').order_by('-created')
+        return qs
+
+
+# ------------------------------- ajax stuff -----------------------------------
+def moderate_confirm_action(request, id, action):
+    if request.is_ajax():
+        # check rights to mmoderate
+        is_moderator = request.user.groups.filter(name__in=GROUPS_CAN_MODERATE).exists()
+        if is_moderator is False:
+            return HttpResponse('')
+        return render_to_response('linkcat/moderation/moderate_link_confirm.html',
+                                    {'id':id, 'action':action},
+                                    context_instance=RequestContext(request),
+                                    content_type="application/xhtml+xml"
+                                    )
+    else:
+        raise Http404
+
+def moderate_link(request, id, action):
+    if request.is_ajax():
+        # check rights to mmoderate
+        is_moderator = request.user.groups.filter(name__in=GROUPS_CAN_MODERATE).exists()
+        if is_moderator is False:
+            return HttpResponse('')
+        # get the link
+        try:
+            link = Link.objects.get(pk=int(id))
+        except:
+            return HttpResponse('Error: link not found')
+        # process action
+        if action == 'accept':
+            link.status = 0
+            link.save()
+        elif action == 'reject':
+            link.delete()
+        return render_to_response('linkcat/moderation/link_moderated.html',
+                                  {'id':id},
+                                    context_instance=RequestContext(request),
+                                    content_type="application/xhtml+xml"
+                                    )
+    else:
+        raise Http404
 
 
 def add_link_form(request, slug):
