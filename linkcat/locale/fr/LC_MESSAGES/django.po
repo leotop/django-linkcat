@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-05-24 12:56+0000\n"
+"POT-Creation-Date: 2016-05-25 12:43+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -23,26 +23,42 @@ msgid "Links catalog"
 msgstr "Catalogue de liens"
 
 #: models.py:11
-msgid "Url"
-msgstr "Url"
+#, fuzzy
+#| msgid "There are no categories yet"
+msgid "Parent category"
+msgstr "Il n'y a pas encore de catégories"
 
 #: models.py:12
-msgid "Name"
-msgstr "Nom"
+msgid "Navigation image"
+msgstr "Image de navigation"
 
-#: models.py:13
+#: models.py:13 models.py:28
 msgid "Description"
 msgstr "Description"
 
-#: models.py:14 templates/linkcat/moderation/link_inline.html:9
+#: models.py:17 models.py:29 templates/linkcat/moderation/link_inline.html:9
 msgid "Category"
 msgstr "Catégorie"
 
-#: models.py:17
+#: models.py:18
+#, fuzzy
+#| msgid "Category"
+msgid "Categories"
+msgstr "Catégorie"
+
+#: models.py:26
+msgid "Url"
+msgstr "Url"
+
+#: models.py:27
+msgid "Name"
+msgstr "Nom"
+
+#: models.py:32
 msgid "Link"
 msgstr "Lien"
 
-#: models.py:18
+#: models.py:33
 msgid "Links"
 msgstr "Liens"
 
