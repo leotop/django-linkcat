@@ -3,15 +3,30 @@
 from django.db import models
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
-from mcat.models import Category
-from mbase.models import MetaBaseModel, MetaBasePostedByModel, MetaBaseStatusModel
+from mptt.models import TreeForeignKey, MPTTModel
+from mbase.models import MetaBaseModel, MetaBasePostedByModel, MetaBaseStatusModel, MetaBaseNameModel, OrderedModel, MetaBaseUniqueSlugModel
+
+
+class LinksCategory(MPTTModel, MetaBaseModel, MetaBaseNameModel, MetaBaseStatusModel, MetaBaseUniqueSlugModel, OrderedModel):
+    parent = TreeForeignKey('self', null=True, blank=True, related_name=u'children', verbose_name=_(u'Parent category'))
+    image = models.ImageField(null=True, upload_to='categories', verbose_name=_(u"Navigation image"))
+    description = models.TextField(blank=True, verbose_name=_(u'Description'))
+    
+    
+    class Meta:
+        verbose_name=_(u'Category')
+        verbose_name_plural = _(u'Categories')
+        ordering = ('order',)
+
+    def __unicode__(self):
+        return unicode(self.name)
 
 
 class Link(MetaBaseModel, MetaBaseStatusModel, MetaBasePostedByModel):
     url = models.URLField(verbose_name=_(u'Url'))
     name = models.CharField(max_length=200, verbose_name=_(u'Name'))
     description = models.TextField(blank=True, verbose_name=_(u'Description'))
-    category = models.ForeignKey(Category, verbose_name=_(u'Category'))
+    category = models.ForeignKey(LinksCategory, verbose_name=_(u'Category'))
     
     class Meta:
         verbose_name=_(u'Link')

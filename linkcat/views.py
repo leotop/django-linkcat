@@ -11,7 +11,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.utils.html import strip_tags
 from django.utils.translation import ugettext_lazy as _
 from braces.views import GroupRequiredMixin
-from mcat.models import Category
+from linkcat.models import LinksCategory as Category
 from linkcat.models import Link
 from linkcat.forms import AddLinkForm
 from linkcat.conf import PAGINATE_BY, GROUPS_CAN_POST_LINK, GROUPS_CAN_MODERATE
@@ -28,7 +28,7 @@ class LinksHomeView(TemplateView):
             if self.request.user.is_superuser:
                 is_moderator = True
             else:
-                is_moderator = request.user.groups.filter(name__in=GROUPS_CAN_POST_LINK).exists()
+                is_moderator = self.request.user.groups.filter(name__in=GROUPS_CAN_POST_LINK).exists()
         num_items_in_queue = 0
         if is_moderator:
             num_items_in_queue = Link.objects.filter(status=1).count()

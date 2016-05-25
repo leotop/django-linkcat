@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-05-22 17:31+0000\n"
+"POT-Creation-Date: 2016-05-24 12:56+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,27 +22,27 @@ msgstr ""
 msgid "Links catalog"
 msgstr "Catalogue de liens"
 
-#: models.py:10
+#: models.py:11
 msgid "Url"
 msgstr "Url"
 
-#: models.py:11
+#: models.py:12
 msgid "Name"
 msgstr "Nom"
 
-#: models.py:12
+#: models.py:13
 msgid "Description"
 msgstr "Description"
 
-#: models.py:13
+#: models.py:14 templates/linkcat/moderation/link_inline.html:9
 msgid "Category"
 msgstr "Catégorie"
 
-#: models.py:16
+#: models.py:17
 msgid "Link"
 msgstr "Lien"
 
-#: models.py:17
+#: models.py:18
 msgid "Links"
 msgstr "Liens"
 
@@ -56,6 +56,7 @@ msgstr "Ok, recharger"
 
 #: templates/linkcat/add_link_success_message.html:9
 #: templates/linkcat/add_link_success_message.html:11
+#: templates/linkcat/moderation/link_moderated.html:2
 msgid "Ok"
 msgstr "Ok"
 
@@ -63,7 +64,12 @@ msgstr "Ok"
 msgid "Home"
 msgstr "Accueil"
 
-#: templates/linkcat/index.html:35
+#: templates/linkcat/index.html:26 templates/linkcat/moderation/queue.html:4
+#: templates/linkcat/moderation/queue.html:15
+msgid "Moderation queue"
+msgstr "File de modération"
+
+#: templates/linkcat/index.html:43
 msgid "There are no categories yet"
 msgstr "Il n'y a pas encore de catégories"
 
@@ -79,30 +85,67 @@ msgstr "Ajouter un lien"
 msgid "No links yet"
 msgstr "Pas encore de liens"
 
+#: templates/linkcat/moderation/link_inline.html:10
+msgid "Posted by"
+msgstr "Posté par"
+
+#: templates/linkcat/moderation/link_inline.html:15
+msgid "Reject link"
+msgstr "Rejetter le lien"
+
+#: templates/linkcat/moderation/link_inline.html:16
+#, fuzzy
+#| msgid "Add link"
+msgid "Accept link"
+msgstr "Ajouter un lien"
+
+#: templates/linkcat/moderation/moderate_link_confirm.html:3
+#: templates/linkcat/moderation/moderate_link_confirm.html:6
+msgid "Cancel"
+msgstr "Annuler"
+
+#: templates/linkcat/moderation/moderate_link_confirm.html:4
+msgid "Ok save"
+msgstr "Ok sauver"
+
+#: templates/linkcat/moderation/moderate_link_confirm.html:7
+msgid "Ok delete"
+msgstr "Ok effacer"
+
+#: templates/linkcat/moderation/paginate.html:6
 #: templates/linkcat/paginate.html:6
 msgid "Previous"
 msgstr "Précédent"
 
+#: templates/linkcat/moderation/paginate.html:10
 #: templates/linkcat/paginate.html:10
 msgid "Next"
 msgstr "Suivant"
 
-#: views.py:85
+#: templates/linkcat/moderation/queue.html:11
+msgid "links to moderate"
+msgstr "liens à modérer"
+
+#: templates/linkcat/moderation/queue.html:23
+msgid "Nothing to moderate"
+msgstr "Rien à modérer"
+
+#: views.py:149
 msgid "Please provide an url"
 msgstr "Merci de fournir une url"
 
-#: views.py:88 views.py:110
+#: views.py:152 views.py:174
 msgid "Please provide a name for the link"
 msgstr "Merci de fournir un nom pour ce lien"
 
-#: views.py:98
+#: views.py:162
 msgid "Link posted"
 msgstr "Lien posté"
 
-#: views.py:101
+#: views.py:165
 msgid "Link saved for moderation. Thank you for your participation"
 msgstr "Lien enregistré pour modération. Merci de votre participation"
 
-#: views.py:107
+#: views.py:171
 msgid "Please provide a valid url"
 msgstr "Merci de fournir une url valide"
