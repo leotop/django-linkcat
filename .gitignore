@@ -3,8 +3,6 @@ settings.py
 .project
 .pydevproject
 .settings
-*/migrations/0*
-media/
 
 __pycache__/
 *.py[cod]
@@ -49,10 +47,6 @@ htmlcov/
 nosetests.xml
 coverage.xml
 *,cover
-
-# Translations
-*.mo
-*.pot
 
 # Django stuff:
 *.log
