@@ -1,9 +1,13 @@
+# -*- coding: utf-8 -*-
+
 from django.utils.translation import ugettext_lazy as _
+
 from django.apps import AppConfig
 
-class LinkcatConfig(AppConfig):
-    name = "linkcat"
-    verbose_name = _(u"Links catalog")
+
+class FscreenConfig(AppConfig):
+    name = 'fscreen'
+    verbose_name = _(u"Fullscreen slides")
     
     def ready(self):
         pass
