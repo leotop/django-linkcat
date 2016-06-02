@@ -1,0 +1,11 @@
+{% load i18n %}
+{% if num_links > 0 %}
+    <ul class="list-group">
+	    {% for link in links %}
+	        {% include 'linkcat/link_inline.html' %}
+	    {% endfor %}
+	</ul>
+{% else %}
+	<div class="jumbotron text-center gbf">{% trans "No links yet" %}</div>
+{% endif %}
+

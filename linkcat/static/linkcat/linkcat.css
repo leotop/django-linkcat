@@ -6,3 +6,6 @@
 	border:1px solid grey;
 	box-shadow: 5px 5px 5px #aaa;
 }
+.label-info a, .label-info a:visited {
+	color:ghostwhite;
+}

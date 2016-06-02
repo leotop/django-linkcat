@@ -22,22 +22,22 @@ class LinksCategory(MPTTModel, MetaBaseModel, MetaBaseNameModel, MetaBaseStatusM
         return unicode(self.name)
 
 
-class Link(MetaBaseModel, MetaBaseStatusModel, MetaBasePostedByModel):
-    url = models.URLField(verbose_name=_(u'Url'))
+class Link(MetaBaseModel, MetaBaseStatusModel, MetaBasePostedByModel, OrderedModel):
+    url = models.URLField(max_length=255, verbose_name=_(u'Url'))
     name = models.CharField(max_length=200, verbose_name=_(u'Name'))
     description = models.TextField(blank=True, verbose_name=_(u'Description'))
-    category = models.ForeignKey(LinksCategory, verbose_name=_(u'Category'))
+    category = models.ForeignKey(LinksCategory, related_name='links', verbose_name=_(u'Category'))
     
     class Meta:
         verbose_name=_(u'Link')
         verbose_name_plural = _(u'Links')
-        ordering = ('-created',)
+        ordering = ('order',)
 
     def __unicode__(self):
-        return unicode(self.url)
+        return self.name+' : '+u(self.url)
     
     def __str__(self):
-        return self.url.encode('utf8')
+        return self.name.encode('utf8')+' : '+self.url.encode('utf8')
     
     def get_absolute_url(self):
         return reverse('links-list', kwargs={'slug':self.category.slug})
