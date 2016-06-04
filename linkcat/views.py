@@ -25,14 +25,15 @@ class LinksHomeView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(LinksHomeView, self).get_context_data(**kwargs)
         categories = Category.objects.filter(level__lte=0, status=0)
-        is_moderator = False
+        num_links = Link.objects.all().count()
+        is_modo = is_moderator(self.request.user)
         if self.request.GET.has_key('edit_mode'):
-            is_moderator = is_moderator(self.request.user)
-            if is_moderator:
+            if is_modo:
                 num_items_in_queue = Link.objects.filter(status=1).count()
                 context['num_items_in_queue'] = num_items_in_queue
-        context['is_moderator'] = is_moderator
+        context['is_moderator'] = is_modo
         context['categories'] = categories
+        context['num_links'] = num_links 
         return context
   
 
@@ -73,36 +74,6 @@ class LinksAndCategoriesView(ListView):
         context['default_language'] = DEFAULT_LANGUAGE
         return context
 
-"""
-class LinksListView(ListView):
-    paginate_by = PAGINATE_BY
-    context_object_name = 'links'
-    
-    def get_queryset(self):
-        self.category = get_object_or_404(Category, slug=self.kwargs['slug'], status=0)
-        self.links = Link.objects.filter(category=self.category, status=0).order_by('order')
-        return self.links
-
-    def get_template_names(self):
-        if self.request.is_ajax():
-            template_name = 'linkcat/list_ajax.html'
-        else:
-            template_name = 'linkcat/listcat.html'
-        return [template_name]
-            
-    def get_context_data(self, **kwargs):
-        context = super(LinksListView, self).get_context_data(**kwargs)
-        ancestors = self.category.get_ancestors()
-        if self.request.GET.has_key('edit_mode'):
-            context['edit_mode'] = True
-        context['is_moderator'] = is_moderator(self.request.user)
-        context['num_links'] = len(self.links)
-        context['category'] = self.category
-        context['ancestors'] = ancestors
-        context['default_language'] = DEFAULT_LANGUAGE
-        return context
-"""
- 
 class ModerationQueueView(ListView, GroupRequiredMixin):
     group_required = GROUPS_CAN_MODERATE
     paginate_by = PAGINATE_BY

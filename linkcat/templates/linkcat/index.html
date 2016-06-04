@@ -9,14 +9,17 @@
  
 {% block content %}
 <div class="container">
-		<div class="row">
-			<div class="col-xs-12">
-				{% with current_category as category %}
-					{% include 'linkcat/breadcrumbs.html' %}
-				{% endwith %}
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="pull-right label label-info hidden-xxs" style="position:relative;top:8px;right:10px;font-size:100%">
+				{{ num_links }} {% trans 'links' %}
 			</div>
+			{% with current_category as category %}
+				{% include 'linkcat/breadcrumbs.html' %}
+			{% endwith %}
 		</div>
 	</div>
+</div>
  <div class="row">
 	<div class="col-xs-12 text-center">
 		<h1>{% trans 'Links catalog' %}</h1>
