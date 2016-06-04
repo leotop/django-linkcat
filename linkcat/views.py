@@ -37,13 +37,19 @@ class LinksHomeView(TemplateView):
   
 
 class LinksAndCategoriesView(ListView):
-    template_name = 'linkcat/listcat.html'
     context_object_name = 'links'
     
     def get_queryset(self):
         self.category = get_object_or_404(Category, slug=self.kwargs['slug'], status=0)
         self.links = Link.objects.filter(category=self.category, status=0).order_by('order')
         return self.links
+    
+    def get_template_names(self):
+        if self.request.is_ajax():
+            template_name = 'linkcat/list_ajax.html'
+        else:
+            template_name = 'linkcat/listcat.html'
+        return [template_name]
     
     def get_context_data(self, **kwargs):
         context = super(LinksAndCategoriesView, self).get_context_data(**kwargs)
@@ -67,7 +73,7 @@ class LinksAndCategoriesView(ListView):
         context['default_language'] = DEFAULT_LANGUAGE
         return context
 
-
+"""
 class LinksListView(ListView):
     paginate_by = PAGINATE_BY
     context_object_name = 'links'
@@ -95,7 +101,7 @@ class LinksListView(ListView):
         context['ancestors'] = ancestors
         context['default_language'] = DEFAULT_LANGUAGE
         return context
-
+"""
  
 class ModerationQueueView(ListView, GroupRequiredMixin):
     group_required = GROUPS_CAN_MODERATE
