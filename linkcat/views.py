@@ -35,7 +35,7 @@ class LinksHomeView(TemplateView):
         context['categories'] = categories
         return context
     
-
+"""
 class LinksCategoryView(TemplateView):
     template_name = 'linkcat/browse.html'
 
@@ -48,6 +48,31 @@ class LinksCategoryView(TemplateView):
         context['current_category'] = current_category
         context['categories'] = categories
         context['num_categories'] = len(categories)
+        return context
+"""    
+
+class LinksAndCategoriesView(ListView):
+    template_name = 'linkcat/listcat.html'
+    context_object_name = 'links'
+    
+    def get_queryset(self):
+        self.category = get_object_or_404(Category, slug=self.kwargs['slug'], status=0)
+        self.links = Link.objects.filter(category=self.category, status=0).order_by('order')
+        return self.links
+    
+    def get_context_data(self, **kwargs):
+        context = super(LinksAndCategoriesView, self).get_context_data(**kwargs)
+        edit_mode = False
+        last_level = self.category.level+1
+        categories = self.category.get_descendants().filter(level__lte=last_level, status=0)
+        context['categories'] = categories
+        if self.request.GET.has_key('edit_mode'):
+            context['edit_mode'] = True
+        context['is_moderator'] = is_moderator(self.request.user)
+        context['num_links'] = len(self.links)
+        context['category'] = self.category
+        context['ancestors'] = self.category.get_ancestors()
+        context['default_language'] = DEFAULT_LANGUAGE
         return context
 
 
@@ -146,25 +171,27 @@ def add_link_form(request, slug):
 @csrf_protect     
 def add_link_process_form(request, slug):
     if request.is_ajax():
+        # check user rights
+        if request.user.is_anonymous():
+            return HttpResponse('')
         if request.method == 'POST':
             # get the data
             url = strip_tags(request.POST['url'])
             name = strip_tags(request.POST['name'])
             description = strip_tags(request.POST['description'])
+            language = strip_tags(request.POST['language'])
             # check if data is valid
             msg = ''
             status = None
             if not url:
-                msg = _(u'Please provide an url')
-                status = 'error'
-            if not name:
+                msg = _(u'Please provide a valid url')
+                status = 'data_invalid'
+            if not name and url:
                 msg = _(u'Please provide a name for the link')
-                status = 'error'
-            # check user rights
-            if request.user.is_anonymous():
-                return HttpResponse('')
-            else:
-                link_status = 1
+                status = 'data_invalid'
+            link_status = 1
+            category = Category.objects.filter(slug=slug, status=0).prefetch_related('links')[0]
+            if status != 'data_invalid':
                 if can_post_link(request.user):
                     # skip moderation
                     link_status = 0
@@ -173,25 +200,20 @@ def add_link_process_form(request, slug):
                 else:
                     msg = _(u'Link saved for moderation. Thank you for your participation')
                     status = 'moderation'
-                #category = get_object_or_404(Category, slug=slug, status=0)
-                category = Category.objects.filter(slug=slug, status=0).prefetch_related('links')[0]
                 # auto set order
                 links = category.links.all()
                 if len(links) > 0:
                     order = links.latest('order').order+10
                 else:
                     order = 10
-                if not name:
-                    msg = _(u'Please provide a name for the link')
-                    status = 'data_invalid'
                 # save link
-                if status not in ['error', 'data_invalid']:
-                    Link.objects.create(url=url, name=name, description=description, category=category, status=link_status, posted_by=request.user, order=order)
-                return render_to_response('linkcat/add_link_success_message.html',
-                            {'message':msg, 'status':status, 'category':category},
-                            context_instance=RequestContext(request),
-                            content_type="application/xhtml+xml"
-                            )
+                Link.objects.create(url=url, name=name, description=description, category=category, status=link_status, posted_by=request.user, order=order, language=language)
+            print status
+            return render_to_response('linkcat/add_link_success_message.html',
+                        {'message':msg, 'status':status, 'category':category},
+                        context_instance=RequestContext(request),
+                        content_type="application/xhtml+xml"
+                        )
         else:
             return HttpResponse('')
     else:

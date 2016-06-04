@@ -1,11 +1,11 @@
 {% load i18n %}
 
 <div class="alert alert-success text-center">
-	<p class="gi grs gmv" style="font-size:160%">{{ message }}</p>
+	<p class="gi grs gmv" style="font-size:160%">{{ message|safe }}</p>
 	<div class="gi gus-xxs">
 		{% if status == 'link_saved' %}
 			<a class="btn btn-success" href="javascript:window.location.reload(true)"><i class="fa fa-refresh"></i>&nbsp;{% trans 'Ok, reload' %}</a>
-		{% elif status == 'moderation' or status == 'error' %}
+		{% elif status == 'moderation' %}
 			<a class="btn btn-success" href="javascript:hide_add_link()">{% trans 'Ok' %}</a>
 		{% elif status == 'data_invalid' %}
 			<a class="btn btn-success" href="javascript:add_link('{% url 'links-add-link' slug=category.slug %}')">{% trans 'Ok' %}</a>

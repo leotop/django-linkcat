@@ -1,5 +1,5 @@
 from django.conf.urls import patterns, url
-from linkcat.views import LinksHomeView, LinksCategoryView, LinksListView, switch_links_order, add_link_form, add_link_process_form, ModerationQueueView, moderate_confirm_action, moderate_link 
+from linkcat.views import LinksAndCategoriesView, LinksHomeView, LinksListView, switch_links_order, add_link_form, add_link_process_form, ModerationQueueView, moderate_confirm_action, moderate_link 
 
 
 urlpatterns = [
@@ -10,7 +10,7 @@ urlpatterns = [
     url(r'^moderation/confirm_moderate_link/(?P<id>[0-9]+)/(?P<action>[-_\w]+)/$', moderate_confirm_action, name="links-moderate-link-confirm"),
     url(r'^moderation/moderate_link/(?P<id>[0-9]+)/(?P<action>[-_\w]+)/$', moderate_link, name="links-moderate-link"),
     url(r'^moderation/$', ModerationQueueView.as_view(), name="links-moderation-queue"),
-    url(r'^(?P<slug>[-_\w]+)/$', LinksCategoryView.as_view(), name="links-category-list"),
+    url(r'^(?P<slug>[-_\w]+)/$', LinksAndCategoriesView.as_view(), name="links-category-list"),
     url(r'^', LinksHomeView.as_view(), name="links-home"),
     ]
 
