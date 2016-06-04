@@ -1,19 +1,21 @@
 {% load thumbnail staticfiles %}
 
 <div class="category_inline">
-	<div class="text-center">
+	<div class="text-center gf">
 		<a href="{% url 'links-category-list' category.slug %}">
 		{% if category.image %}
-			{% thumbnail category.image "130x130" format="PNG" as img %}
-				<img src="{{ img.url }}" alt="" style="margin:{{ img|margin:"130x130" }}" />
-			{% endthumbnail %}
+			<div style="min-width:130px;min-height:130px;" class="gf">
+				{% thumbnail category.image "130x130" format="PNG" as img %}
+					<img src="{{ img.url }}" alt="" style="margin:{{ img|margin:"130x130" }}" />
+				{% endthumbnail %}
+			</div>
 		{% elif category.icon %}
-			<div style="width:130px;height:130px;font-size:700%">
+			<div style="min-width:130px;min-height:130px;font-size:700%" class="gf">
 				<i class="fa fa-{{ category.icon }}"></i>
 			</div>
 		{% else %}
 			{# fallback to default #}
-			<div style="width:130px;height:130px;font-size:700%">
+			<div style="min-width:130px;min-height:130px;font-size:700%" class="gf">
 				<i class="fa fa-link"></i>
 			</div>
 		{% endif %}
