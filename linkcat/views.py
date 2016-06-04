@@ -55,7 +55,7 @@ class LinksAndCategoriesView(ListView):
         if len(ancestors) > 0:
             parent = ancestors.reverse()[0]
         edit_mode = False
-        context['categories'] = categories
+        context['categories'] = categories.order_by('order')
         if self.request.GET.has_key('edit_mode'):
             context['edit_mode'] = True
         context['is_moderator'] = is_moderator(self.request.user)
@@ -63,6 +63,7 @@ class LinksAndCategoriesView(ListView):
         context['category'] = self.category
         context['ancestors'] = ancestors
         context['parent'] = parent
+        context['links'] = self.links
         context['default_language'] = DEFAULT_LANGUAGE
         return context
 
