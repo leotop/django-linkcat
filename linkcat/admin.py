@@ -24,7 +24,7 @@ class LinkAdmin(admin.ModelAdmin):
 @admin.register(LinksCategory)
 class LinksCategoryAdmin(admin.ModelAdmin):
     date_hierarchy = 'edited'
-    fields = ['name', 'slug', 'parent', 'description', 'image', 'status', 'order']
+    fields = ['name', 'slug', 'parent', 'description', 'image', 'icon', 'status', 'order']
     list_display = ['name', 'parent', 'created', 'edited', 'status']
     list_select_related = ['editor', 'parent']
     search_fields = ['name', 'editor__username']

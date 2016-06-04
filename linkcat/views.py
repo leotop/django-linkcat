@@ -34,22 +34,7 @@ class LinksHomeView(TemplateView):
         context['is_moderator'] = is_moderator
         context['categories'] = categories
         return context
-    
-"""
-class LinksCategoryView(TemplateView):
-    template_name = 'linkcat/browse.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(LinksCategoryView, self).get_context_data(**kwargs)
-        current_category=get_object_or_404(Category, slug=self.kwargs['slug'])
-        last_level=current_category.level+1
-        categories = current_category.get_descendants().filter(level__lte=last_level, status=0)
-        context['ancestors'] = current_category.get_ancestors()
-        context['current_category'] = current_category
-        context['categories'] = categories
-        context['num_categories'] = len(categories)
-        return context
-"""    
+  
 
 class LinksAndCategoriesView(ListView):
     template_name = 'linkcat/listcat.html'
@@ -65,13 +50,19 @@ class LinksAndCategoriesView(ListView):
         edit_mode = False
         last_level = self.category.level+1
         categories = self.category.get_descendants().filter(level__lte=last_level, status=0)
+        ancestors = self.category.get_ancestors()
+        parent = None
+        if len(ancestors) > 0:
+            parent = ancestors.reverse()[0]
+        edit_mode = False
         context['categories'] = categories
         if self.request.GET.has_key('edit_mode'):
             context['edit_mode'] = True
         context['is_moderator'] = is_moderator(self.request.user)
         context['num_links'] = len(self.links)
         context['category'] = self.category
-        context['ancestors'] = self.category.get_ancestors()
+        context['ancestors'] = ancestors
+        context['parent'] = parent
         context['default_language'] = DEFAULT_LANGUAGE
         return context
 
@@ -89,18 +80,18 @@ class LinksListView(ListView):
         if self.request.is_ajax():
             template_name = 'linkcat/list_ajax.html'
         else:
-            template_name = 'linkcat/link_list.html'
+            template_name = 'linkcat/listcat.html'
         return [template_name]
             
     def get_context_data(self, **kwargs):
         context = super(LinksListView, self).get_context_data(**kwargs)
-        edit_mode = False
+        ancestors = self.category.get_ancestors()
         if self.request.GET.has_key('edit_mode'):
             context['edit_mode'] = True
         context['is_moderator'] = is_moderator(self.request.user)
         context['num_links'] = len(self.links)
         context['category'] = self.category
-        context['ancestors'] = self.category.get_ancestors()
+        context['ancestors'] = ancestors
         context['default_language'] = DEFAULT_LANGUAGE
         return context
 

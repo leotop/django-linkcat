@@ -25,11 +25,16 @@
 	<a name="main_content"></a>
 	<div class="row">
 		<div class="col-xs-12 col-md-offset-1 col-md-10 col-md-offset-1 col-lg-offset-2 col-lg-8 col-lg-offset-2">
-			{% if not user.is_anonymous %}
 				<div id="add-link-btn" class="pull-right gus-l">
-					<a id="add-link-btn-a" class="btn btn-primary" href="javascript:add_link('{% url 'links-add-link' slug=category.slug %}')">{% trans 'Add link' %}</a>
+					{% if not user.is_anonymous %}
+						<a id="add-link-btn-a" class="btn btn-primary" href="javascript:add_link('{% url 'links-add-link' slug=category.slug %}')">{% trans 'Add link' %}</a>
+					{% endif %}
+					{% if not parent %}
+						<a class="btn btn-default" href="../"><i class="fa fa-lg fa-level-up"></i></a>
+					{% else %}
+						<a class="btn btn-default" href="{% url 'links-category-list' slug=parent.slug %}"><i class="fa fa-lg fa-level-up"></i></a>			
+					{% endif %}
 				</div>
-			{% endif %}
 			<h1 class="text-center"><a name="title"></a>
 			{% thumbnail category.image "80x80" format="PNG" as img %}
 				<img src="{{ img.url }}" alt="" style="margin:{{ img|margin:"80x80" }}" />
@@ -57,7 +62,7 @@
 					    {% endfor %}
 					</ul>
 				{% else %}
-					<div class="jumbotron text-center gbf">{% trans "No links yet" %}</div>
+					<div class="jumbotron text-center gbf gus-md">{% trans "No links yet" %}</div>
 				{% endif %}
 			</div>
 			<div class="gus-l gf text-center">{% include "linkcat/paginate.html" %}</div>

@@ -10,7 +10,8 @@ from linkcat.conf import LANGUAGES, DEFAULT_LANGUAGE
 
 class LinksCategory(MPTTModel, MetaBaseModel, MetaBaseNameModel, MetaBaseStatusModel, MetaBaseUniqueSlugModel, OrderedModel):
     parent = TreeForeignKey('self', null=True, blank=True, related_name=u'children', verbose_name=_(u'Parent category'))
-    image = models.ImageField(null=True, upload_to='categories', verbose_name=_(u"Navigation image"))
+    image = models.ImageField(null=True, blank=True, upload_to='categories', verbose_name=_(u"Navigation image"))
+    icon = models.CharField(max_length=60, blank=True, verbose_name=_(u'Icon'), help_text=_(u'Name of a font awesome icon: ex: "pencil"'))
     description = models.TextField(blank=True, verbose_name=_(u'Description'))
     
     
