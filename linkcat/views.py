@@ -230,6 +230,6 @@ def switch_links_order(request, link_pk_1, link_pk_2):
         link1.save()
         link2.save()
         print str(link1.order)+' / '+str(link2.order)
-        return HttpResponseRedirect(reverse('links-list', kwargs={'slug': category.slug})+'?edit_mode=1')
+        return HttpResponseRedirect(reverse('links-category-list', kwargs={'slug': category.slug})+'?edit_mode=1')
     else:
         raise Http404
