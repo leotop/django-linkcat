@@ -1,40 +1,222 @@
 # -*- coding: utf-8 -*-
 
-from django.http import Http404, HttpResponse
-from django.views.generic import TemplateView
-from django.shortcuts import get_object_or_404
-from fscreen.models import Presentation
-from fscreen.utils import get_slide
+from django.core.urlresolvers import reverse
+from django.core.paginator import Paginator
+from django.http.response import Http404
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import get_object_or_404, render_to_response
+from django.views.generic import TemplateView, ListView, CreateView
+from django.template import RequestContext
+from django.views.generic.edit import FormView
+from django.views.decorators.csrf import csrf_protect
+from django.utils.html import strip_tags
+from django.utils.translation import ugettext_lazy as _
+from braces.views import GroupRequiredMixin
+from linkcat.models import LinksCategory as Category
+from linkcat.models import Link
+from linkcat.forms import AddLinkForm
+from linkcat.conf import PAGINATE_BY, GROUPS_CAN_MODERATE, DEFAULT_LANGUAGE
+from linkcat.utils import is_moderator, can_post_link
 
 
-class PresentationView(TemplateView): 
-    template_name = "fscreen/index.html"
-    
+class LinksHomeView(TemplateView):
+    template_name = 'linkcat/index.html'
+
     def get_context_data(self, **kwargs):
-        context = super(PresentationView, self).get_context_data(**kwargs)
-        presentation = get_object_or_404(Presentation, slug=self.kwargs['slug'])
-        context['presentation'] = presentation
-        context['screen_number'] = 1
+        context = super(LinksHomeView, self).get_context_data(**kwargs)
+        categories = Category.objects.filter(level__lte=0, status=0)
+        is_moderator = False
+        if self.request.GET.has_key('edit_mode'):
+            is_moderator = is_moderator(self.request.user)
+            if is_moderator:
+                num_items_in_queue = Link.objects.filter(status=1).count()
+                context['num_items_in_queue'] = num_items_in_queue
+        context['is_moderator'] = is_moderator
+        context['categories'] = categories
+        return context
+    
+
+class LinksCategoryView(TemplateView):
+    template_name = 'linkcat/browse.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(LinksCategoryView, self).get_context_data(**kwargs)
+        current_category=get_object_or_404(Category, slug=self.kwargs['slug'])
+        last_level=current_category.level+1
+        categories = current_category.get_descendants().filter(level__lte=last_level, status=0)
+        context['ancestors'] = current_category.get_ancestors()
+        context['current_category'] = current_category
+        context['categories'] = categories
+        context['num_categories'] = len(categories)
         return context
 
 
-class ScreenLoader(TemplateView): 
-    template_name = "fscreen/screen.html"
+class LinksListView(ListView):
+    paginate_by = PAGINATE_BY
+    context_object_name = 'links'
     
-    def get_context_data(self, **kwargs):
+    def get_queryset(self):
+        self.category = get_object_or_404(Category, slug=self.kwargs['slug'], status=0)
+        self.links = Link.objects.filter(category=self.category, status=0).order_by('order')
+        return self.links
+
+    def get_template_names(self):
         if self.request.is_ajax():
-            context = super(ScreenLoader, self).get_context_data(**kwargs)
-            try:
-                screen_number = int(kwargs['screen_number']) - 1
-                presentation = Presentation.objects.filter(slug=self.kwargs['presentation_slug']).prefetch_related('screen')[0]
-            except Presentation.DoesNotExist:
-                return HttpResponse('')
-            screen = presentation.screen.all().order_by('order')[screen_number]
-            screen_width = int(kwargs['screen_width'])
-            image, html = get_slide(screen, screen_width)
-            context['presentation'] = presentation
-            context['image'] = image
-            context['html'] = html
-            return context
+            template_name = 'linkcat/list_ajax.html'
         else:
-            raise Http404
+            template_name = 'linkcat/link_list.html'
+        return [template_name]
+            
+    def get_context_data(self, **kwargs):
+        context = super(LinksListView, self).get_context_data(**kwargs)
+        edit_mode = False
+        if self.request.GET.has_key('edit_mode'):
+            context['edit_mode'] = True
+        context['is_moderator'] = is_moderator(self.request.user)
+        context['num_links'] = len(self.links)
+        context['category'] = self.category
+        context['ancestors'] = self.category.get_ancestors()
+        context['default_language'] = DEFAULT_LANGUAGE
+        return context
+
+ 
+class ModerationQueueView(ListView, GroupRequiredMixin):
+    group_required = GROUPS_CAN_MODERATE
+    paginate_by = PAGINATE_BY
+    context_object_name = 'links'
+    template_name = 'linkcat/moderation/queue.html'
+    
+    def get_queryset(self):
+        qs = Link.objects.filter(status=1).select_related('category', 'posted_by').order_by('-created')
+        return qs
+
+
+# ------------------------------- ajax stuff -----------------------------------
+def moderate_confirm_action(request, id, action):
+    if request.is_ajax():
+        # check rights to mmoderate
+        is_moderator = is_moderator(request.user)
+        if is_moderator is False:
+            return HttpResponse('')
+        return render_to_response('linkcat/moderation/moderate_link_confirm.html',
+                                    {'id':id, 'action':action},
+                                    context_instance=RequestContext(request),
+                                    content_type="application/xhtml+xml"
+                                    )
+    else:
+        raise Http404
+
+def moderate_link(request, id, action):
+    if request.is_ajax():
+        # check rights to mmoderate
+        is_moderator = is_moderator(request.user)
+        if is_moderator is False:
+            return HttpResponse('')
+        # get the link
+        try:
+            link = Link.objects.get(pk=int(id))
+        except:
+            return HttpResponse('Error: link not found')
+        # process action
+        if action == 'accept':
+            link.status = 0
+            link.save()
+        elif action == 'reject':
+            link.delete()
+        return render_to_response('linkcat/moderation/link_moderated.html',
+                                  {'id':id},
+                                    context_instance=RequestContext(request),
+                                    content_type="application/xhtml+xml"
+                                    )
+    else:
+        raise Http404
+
+
+def add_link_form(request, slug):
+    category = get_object_or_404(Category, slug=slug, status=0)
+    if request.is_ajax():
+        return render_to_response('linkcat/add_link_form.html',
+                                    {'form': AddLinkForm(), 'category':category},
+                                    context_instance=RequestContext(request),
+                                    content_type="application/xhtml+xml"
+                                    )
+    else:
+        raise Http404
+    
+@csrf_protect     
+def add_link_process_form(request, slug):
+    if request.is_ajax():
+        if request.method == 'POST':
+            # get the data
+            url = strip_tags(request.POST['url'])
+            name = strip_tags(request.POST['name'])
+            description = strip_tags(request.POST['description'])
+            # check if data is valid
+            msg = ''
+            status = None
+            if not url:
+                msg = _(u'Please provide an url')
+                status = 'error'
+            if not name:
+                msg = _(u'Please provide a name for the link')
+                status = 'error'
+            # check user rights
+            if request.user.is_anonymous():
+                return HttpResponse('')
+            else:
+                link_status = 1
+                if can_post_link(request.user):
+                    # skip moderation
+                    link_status = 0
+                    msg = _(u'Link posted')
+                    status = 'link_saved'
+                else:
+                    msg = _(u'Link saved for moderation. Thank you for your participation')
+                    status = 'moderation'
+                #category = get_object_or_404(Category, slug=slug, status=0)
+                category = Category.objects.filter(slug=slug, status=0).prefetch_related('links')[0]
+                # auto set order
+                links = category.links.all()
+                if len(links) > 0:
+                    order = links.latest('order').order+10
+                else:
+                    order = 10
+                if not name:
+                    msg = _(u'Please provide a name for the link')
+                    status = 'data_invalid'
+                # save link
+                if status not in ['error', 'data_invalid']:
+                    Link.objects.create(url=url, name=name, description=description, category=category, status=link_status, posted_by=request.user, order=order)
+                return render_to_response('linkcat/add_link_success_message.html',
+                            {'message':msg, 'status':status, 'category':category},
+                            context_instance=RequestContext(request),
+                            content_type="application/xhtml+xml"
+                            )
+        else:
+            return HttpResponse('')
+    else:
+        raise Http404
+    
+    
+def switch_links_order(request, link_pk_1, link_pk_2):
+    if request.is_ajax():
+        # get the objects
+        try:
+            links = Link.objects.filter(pk__in=[link_pk_1,link_pk_2]).select_related('category').order_by('order')
+        except Link.ObjectDoesNotExist:
+            return HttpResponse('')
+        link1 = links.filter(pk=link_pk_1)[0]
+        link2 = links.filter(pk=link_pk_2)[0]
+        category = link1.category
+        link1_order = link1.order
+        link2_order = link2.order
+        print str(link1.order)+' / '+str(link2.order)
+        # switdh order
+        link1.order = link2_order
+        link2.order = link1_order
+        link1.save()
+        link2.save()
+        print str(link1.order)+' / '+str(link2.order)
+        return HttpResponseRedirect(reverse('links-list', kwargs={'slug': category.slug})+'?edit_mode=1')
+    else:
+        raise Http404

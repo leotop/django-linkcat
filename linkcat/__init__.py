@@ -1,2 +1,2 @@
 __version__ = '0.1'
-default_app_config = 'fscreen.apps.FscreenConfig'
+default_app_config = 'linkcat.apps.LinkcatConfig'

@@ -6,15 +6,17 @@
 				{% if not forloop.first %}
 					{% with previous=links|previous:forloop.counter0 %}
 						<a href="javascript:load_url('#links_list', '{% url 'links-switch-links-order' link_pk_1=link.pk link_pk_2=previous.pk %}')"><i class="fa fa-arrow-up" style="color:green"></i></a>
-					{% endwith %}
+					{% endwith %}&nbsp;
 				{% endif %}
 				{% if not forloop.last %}
 					{% with next=links|next:forloop.counter0 %}
 						<a href="javascript:load_url('#links_list', '{% url 'links-switch-links-order' link_pk_1=next.pk link_pk_2=link.pk %}')"><i class="fa fa-arrow-down" style="color:green"></i></a>
-					{% endwith %}
+					{% endwith %}&nbsp;&nbsp;
 				{% endif %}
+				<a href="{% url 'admin:linkcat_link_change' link.id %}"><i class="fa fa-pencil"></i></a>
 			</div>
 		{% endif %}
 	{% endif %}
 	<a href="{{ link.url }}">{{ link.name }}</a>{% if link.description %} {{ link.description|lower }}{% endif %}
+	{% if link.language != default_language %}<img src="/static/linkcat/flags/{{ link.language }}.png" alt="" />{% endif %}
 </li>
