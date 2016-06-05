@@ -43,7 +43,7 @@ class Link(MetaBaseModel, MetaBaseStatusModel, MetaBasePostedByModel, OrderedMod
         return self.name.encode('utf8')+' : '+self.url.encode('utf8')
     
     def get_absolute_url(self):
-        return reverse('links-list', kwargs={'slug':self.category.slug})
+        return reverse('links-category-list', kwargs={'slug':self.category.slug})
     
     def save(self, *args, **kwargs):
         # limit the number of caracters for description

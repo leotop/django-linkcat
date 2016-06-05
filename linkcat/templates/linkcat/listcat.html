@@ -7,62 +7,65 @@
 	<script type="text/javascript" src="{% static 'linkcat/linkcat.js' %}"></script>
 {% endblock extra_head %}
 
-{% block content %}
-	<div class="container">
-		<div class="row">
-			<div class="col-xs-12">
-				<div class="pull-right label label-info hidden-xxs" style="position:relative;top:8px;right:10px;font-size:100%">
-					{% if is_moderator %}
-						<a href="{% if not edit_mode %}?edit_mode=1{% else %}.{% endif %}"><i class="fa fa-pencil"></i></a>
-					{% endif %}
-					{{ num_links }} {% trans 'links' %}
-				</div>
-				{% include 'linkcat/breadcrumbs.html' %}
-			</div>
-		</div>
+{% block breadcrumbs %}
+	<div class="pull-right label label-info hidden-xxs">
+		{% if is_moderator %}
+			<a href="{% if not edit_mode %}?edit_mode=1{% else %}.{% endif %}"><i class="fa fa-pencil"></i></a>
+		{% endif %}
+		{{ num_links }} {% trans 'links' %}
 	</div>
+	{% with current_category as category %}
+		{% include 'linkcat/breadcrumbs.html' %}
+	{% endwith %}
+{% endblock %}
+
+{% block content %}
 	<div class="label label-info visible-xxs" style="font-size:100%">{{ num_links }} {% trans 'links' %}</div>
 	<a name="main_content"></a>
 	<div class="row">
 		<div class="col-xs-12 col-md-offset-1 col-md-10 col-md-offset-1 col-lg-offset-2 col-lg-8 col-lg-offset-2">
-				<div id="add-link-btn" class="pull-right gus-l">
-					{% if not user.is_anonymous %}
-						<a id="add-link-btn-a" class="btn btn-primary" href="javascript:add_link('{% url 'links-add-link' slug=category.slug %}')">{% trans 'Add link' %}</a>
-					{% endif %}
-					{% if not parent %}
-						<a class="btn btn-default" href="../"><i class="fa fa-lg fa-level-up"></i></a>
-					{% else %}
-						<a class="btn btn-default" href="{% url 'links-category-list' slug=parent.slug %}"><i class="fa fa-lg fa-level-up"></i></a>			
-					{% endif %}
-				</div>
-			<h1 class="text-center"><a name="title"></a>
-				{% if category.image %}
-					{% thumbnail category.image "80x80" format="PNG" as img %}
-						<img src="{{ img.url }}" alt="" style="margin:{{ img|margin:"80x80" }}" />
-					{% endthumbnail %}
-				{% elif category.icon %}
-					<i class="fa fa-{{ category.icon }}"></i>
-				{% else %}
-					{# fallback to default #}
-					<i class="fa fa-link"></i>
+			<div id="add-link-btn" class="pull-right gus-l">
+				{% if not user.is_anonymous %}
+					<a id="add-link-btn-a" class="btn btn-primary" href="javascript:add_link('{% url 'links-add-link' slug=category.slug %}')">{% trans 'Add link' %}</a>
 				{% endif %}
-				{{ category.name }}
+				{% if not parent %}
+					<a class="btn btn-default" href="../"><i class="fa fa-lg fa-level-up"></i></a>
+				{% else %}
+					<a class="btn btn-default" href="{% url 'links-category-list' slug=parent.slug %}"><i class="fa fa-lg fa-level-up"></i></a>			
+				{% endif %}
+			</div>
+			<h1 class="text-center"><a name="title"></a>
+			{% if category.image %}
+				{% thumbnail category.image "80x80" format="PNG" as img %}
+					<img src="{{ img.url }}" alt="" style="margin:{{ img|margin:"80x80" }}" />
+				{% endthumbnail %}
+			{% elif category.icon %}
+				<i class="fa fa-{{ category.icon }}"></i>
+			{% else %}
+				{# fallback to default #}
+				<i class="fa fa-link"></i>
+			{% endif %}
+			{{ category.name }}
 			</h1>
 			<div id="add-link" style="display:none"></div>
-			<div class="row">
-				<div class="col-xs-12 text-center">
-					<a name="main_content"></a>
-					{% for category in categories %}
-			            {% if category.is_leaf_node %}
-			            	{% with leaf=True %}
-			             		{% include 'linkcat/category_inline.html' %}
-			             	{% endwith %}
-				        {% else %}
-				        	{% include 'linkcat/category_inline.html' %}
-				        {% endif %}
-					{% endfor %}
-				</div>
-			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12 text-center">
+			<a name="main_content"></a>
+			{% for category in categories %}
+	            {% if category.is_leaf_node %}
+	            	{% with leaf=True %}
+	             		{% include 'linkcat/category_inline.html' %}
+	             	{% endwith %}
+		        {% else %}
+		        	{% include 'linkcat/category_inline.html' %}
+		        {% endif %}
+			{% endfor %}
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12 col-md-offset-1 col-md-10 col-md-offset-1 col-lg-offset-2 col-lg-8 col-lg-offset-2">
 			<div id="links_list" class="gus">
 				{% if num_links > 0 %}
 				    <ul class="list-group">
