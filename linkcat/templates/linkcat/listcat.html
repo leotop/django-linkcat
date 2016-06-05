@@ -34,7 +34,8 @@
 					<a class="btn btn-default" href="{% url 'links-category-list' slug=parent.slug %}"><i class="fa fa-lg fa-level-up"></i></a>			
 				{% endif %}
 			</div>
-			<h1 class="text-center"><a name="title"></a>
+			<h1 class="text-center" style="min-height:60px;{% if not category.image %}margin-top:1em;{% endif %}">
+			<a name="title"></a>
 			{% if category.image %}
 				{% thumbnail category.image "80x80" format="PNG" as img %}
 					<img src="{{ img.url }}" alt="" style="margin:{{ img|margin:"80x80" }}" />
@@ -68,13 +69,15 @@
 		<div class="col-xs-12 col-md-offset-1 col-md-10 col-md-offset-1 col-lg-offset-2 col-lg-8 col-lg-offset-2">
 			<div id="links_list" class="gus">
 				{% if num_links > 0 %}
-				    <ul class="list-group">
+				    <ul class="list-unstyled">
 					    {% for link in links %}
 					        {% include 'linkcat/link_inline.html' %}
 					    {% endfor %}
 					</ul>
 				{% else %}
-					<div class="jumbotron text-center gbf gus-md">{% trans "No links yet" %}</div>
+					{% if not categories %}
+						<div class="jumbotron text-center gbf gus-md">{% trans "No links yet" %}</div>
+					{% endif %}
 				{% endif %}
 			</div>
 			<div class="gus-l gf text-center">{% include "linkcat/paginate.html" %}</div>

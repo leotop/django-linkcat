@@ -1,5 +1,5 @@
 {% load linkcat %}
-<li class="list-group-item link_inline">
+<li class="link_inline">
 	{% if edit_mode %}
 		{% if is_moderator %}
 			<div class="pull-right">
@@ -17,6 +17,6 @@
 			</div>
 		{% endif %}
 	{% endif %}
-	<a href="{{ link.url }}">{{ link.name }}</a>{% if link.description %} {{ link.description|lower }}{% endif %}
-	{% if link.language != default_language %}<img src="/static/linkcat/flags/{{ link.language }}.png" alt="" />{% endif %}
+	<a href="{{ link.url }}">{{ link.name }}</a>{% if link.description %} {{ link.description|lower }}{% endif %}&nbsp;{% if link.language != default_language %}<img src="/static/linkcat/flags/{{ link.language }}.png" alt="" />{% endif %}
+	<hr style="margin-top:0.6em;margin-bottom:1em" />
 </li>
