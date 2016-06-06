@@ -27,10 +27,9 @@ class LinksHomeView(TemplateView):
         categories = Category.objects.filter(level__lte=0, status=0)
         num_links = Link.objects.all().count()
         is_modo = is_moderator(self.request.user)
-        if self.request.GET.has_key('edit_mode'):
-            if is_modo:
-                num_items_in_queue = Link.objects.filter(status=1).count()
-                context['num_items_in_queue'] = num_items_in_queue
+        if is_modo:
+            num_items_in_queue = Link.objects.filter(status=1).count()
+            context['num_items_in_queue'] = num_items_in_queue
         context['is_moderator'] = is_modo
         context['categories'] = categories
         context['num_links'] = num_links 
@@ -89,8 +88,8 @@ class ModerationQueueView(ListView, GroupRequiredMixin):
 def moderate_confirm_action(request, id, action):
     if request.is_ajax():
         # check rights to mmoderate
-        is_moderator = is_moderator(request.user)
-        if is_moderator is False:
+        is_modo = is_moderator(request.user)
+        if is_modo is False:
             return HttpResponse('')
         return render_to_response('linkcat/moderation/moderate_link_confirm.html',
                                     {'id':id, 'action':action},
@@ -102,9 +101,9 @@ def moderate_confirm_action(request, id, action):
 
 def moderate_link(request, id, action):
     if request.is_ajax():
-        # check rights to mmoderate
-        is_moderator = is_moderator(request.user)
-        if is_moderator is False:
+        # check rights to moderate
+        is_modo = is_moderator(request.user)
+        if is_modo is False:
             return HttpResponse('')
         # get the link
         try:
@@ -191,6 +190,10 @@ def add_link_process_form(request, slug):
     
 def switch_links_order(request, link_pk_1, link_pk_2):
     if request.is_ajax():
+        # check rights to moderate
+        is_modo = is_moderator(request.user)
+        if is_modo is False:
+            return HttpResponse('')
         # get the objects
         try:
             links = Link.objects.filter(pk__in=[link_pk_1,link_pk_2]).select_related('category').order_by('order')
@@ -207,7 +210,6 @@ def switch_links_order(request, link_pk_1, link_pk_2):
         link2.order = link1_order
         link1.save()
         link2.save()
-        print str(link1.order)+' / '+str(link2.order)
         return HttpResponseRedirect(reverse('links-category-list', kwargs={'slug': category.slug})+'?edit_mode=1')
     else:
         raise Http404
