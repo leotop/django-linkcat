@@ -4,11 +4,11 @@ from django.db import models
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 from mptt.models import TreeForeignKey, MPTTModel
-from mbase.models import MetaBaseModel, MetaBasePostedByModel, MetaBaseStatusModel, MetaBaseNameModel, OrderedModel, MetaBaseUniqueSlugModel
+from mbase.models import MetaBaseModel, MetaBasePostedByModel, MetaBaseStatusModel, MetaBaseNameModel, MetaBaseOrderedModel, MetaBaseDateModel, MetaBaseUniqueSlugModel
 from linkcat.conf import LANGUAGES, DEFAULT_LANGUAGE
 
 
-class LinksCategory(MPTTModel, MetaBaseModel, MetaBaseNameModel, MetaBaseStatusModel, MetaBaseUniqueSlugModel, OrderedModel):
+class LinksCategory(MPTTModel, MetaBaseModel, MetaBaseNameModel, MetaBaseStatusModel, MetaBaseUniqueSlugModel, MetaBaseOrderedModel):
     parent = TreeForeignKey('self', null=True, blank=True, related_name=u'children', verbose_name=_(u'Parent category'))
     image = models.ImageField(null=True, blank=True, upload_to='categories', verbose_name=_(u"Navigation image"))
     icon = models.CharField(max_length=60, blank=True, verbose_name=_(u'Icon'), help_text=_(u'Name of a font awesome icon: ex: "pencil"'))
@@ -24,7 +24,7 @@ class LinksCategory(MPTTModel, MetaBaseModel, MetaBaseNameModel, MetaBaseStatusM
         return unicode(self.name)
 
 
-class Link(MetaBaseModel, MetaBaseStatusModel, MetaBasePostedByModel, OrderedModel):
+class Link(MetaBaseModel, MetaBaseStatusModel, MetaBasePostedByModel, MetaBaseOrderedModel, MetaBaseDateModel):
     url = models.URLField(max_length=255, verbose_name=_(u'Url'))
     name = models.CharField(max_length=200, verbose_name=_(u'Name'))
     description = models.TextField(blank=True, verbose_name=_(u'Description'))

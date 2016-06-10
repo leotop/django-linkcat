@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-06-04 15:12+0000\n"
+"POT-Creation-Date: 2016-06-10 13:41+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: apps.py:6 templates/linkcat/index.html:8 templates/linkcat/index.html:22
+#: apps.py:6 templates/linkcat/index.html:8 templates/linkcat/index.html:23
 msgid "Links catalog"
 msgstr "Catalogue de liens"
 
@@ -70,7 +70,7 @@ msgstr ""
 msgid "Link"
 msgstr "Lien"
 
-#: models.py:36
+#: models.py:36 templates/linkcat/breadcrumbs.html:4
 msgid "Links"
 msgstr "Liens"
 
@@ -88,28 +88,25 @@ msgstr "Ok, recharger"
 msgid "Ok"
 msgstr "Ok"
 
-#: templates/linkcat/breadcrumbs.html:4
-msgid "Home"
-msgstr "Accueil"
+#: templates/linkcat/index.html:12 templates/linkcat/listcat.html:15
+#: templates/linkcat/listcat.html:21
+msgid "links"
+msgstr "liens"
 
-#: templates/linkcat/index.html:26 templates/linkcat/moderation/queue.html:4
+#: templates/linkcat/index.html:27 templates/linkcat/moderation/queue.html:4
 #: templates/linkcat/moderation/queue.html:15
 msgid "Moderation queue"
 msgstr "File de modération"
 
-#: templates/linkcat/index.html:43
+#: templates/linkcat/index.html:44
 msgid "There are no categories yet"
 msgstr "Il n'y a pas encore de catégories"
 
-#: templates/linkcat/list_ajax.html:9 templates/linkcat/listcat.html:74
+#: templates/linkcat/list_ajax.html:9 templates/linkcat/listcat.html:77
 msgid "No links yet"
 msgstr "Pas encore de liens"
 
-#: templates/linkcat/listcat.html:18 templates/linkcat/listcat.html:24
-msgid "links"
-msgstr "liens"
-
-#: templates/linkcat/listcat.html:30
+#: templates/linkcat/listcat.html:27
 msgid "Add link"
 msgstr "Ajouter un lien"
 
@@ -158,21 +155,38 @@ msgstr "liens à modérer"
 msgid "Nothing to moderate"
 msgstr "Rien à modérer"
 
-#: views.py:179
+#: templates/linkcat/tags/links_recent_entries.html:11
+msgid "By"
+msgstr "Par"
+
+#: templates/linkcat/tags/links_recent_entries.html:12
+#, fuzzy
+#| msgid "Posted by"
+msgid "Posted"
+msgstr "Posté par"
+
+#: templates/linkcat/tags/links_recent_entries.html:12
+msgid "ago"
+msgstr ""
+
+#: views.py:155
 msgid "Please provide a valid url"
 msgstr "Merci de fournir une url valide"
 
-#: views.py:182
+#: views.py:158
 msgid "Please provide a name for the link"
 msgstr "Merci de fournir un nom pour ce lien"
 
-#: views.py:190
+#: views.py:166
 msgid "Link posted"
 msgstr "Lien posté"
 
-#: views.py:193
+#: views.py:169
 msgid "Link saved for moderation. Thank you for your participation"
 msgstr "Lien enregistré pour modération. Merci de votre participation"
+
+#~ msgid "Home"
+#~ msgstr "Accueil"
 
 #~ msgid "Please provide an url"
 #~ msgstr "Merci de fournir une url"

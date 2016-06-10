@@ -1,0 +1,16 @@
+{% load i18n staticfiles linkcat %}
+
+{% last_links %}
+<ul class="list-group">
+	{% for link in links %}
+		<li class="list-group-item">
+		    	<a href="{{ link.url }}">
+		    		{{ link.name }} {{ link.description }}
+		    	</a>
+		    	<div style="font-size:85%;">
+			{% trans 'By' %} <span style="font-weight:bold">{{ user.username }}</span>
+			{% trans 'Posted' %} {{ link.date|timesince }} {% trans 'ago' %}
+			</div>
+		</li>
+	{% endfor %}
+</ul>
