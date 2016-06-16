@@ -5,9 +5,12 @@
 	border-radius:1em;
 	border:1px solid grey;
 	box-shadow: 5px 5px 5px #aaa;
-	width:8em;
-	height:12em;
+	width:auto;
+	height:16.5em;
 }
 .label-info a, .label-info a:visited {
 	color:ghostwhite;
+}
+.link_inline {
+	border-radius:5px;
 }

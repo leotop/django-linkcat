@@ -1,6 +1,13 @@
-{% load i18n %}
+{% load i18n staticfiles %}
+<script type="text/javascript" src="{% static 'linkcat/jquery_colors/jquery.color-2.1.2.min.js' %}"></script>
+{% if request.GET.a %}
+	<script type="text/javascript">
+		var linkid='#link_'+{{ request.GET.a }};
+		$(linkid).css({'background-color':'green'}).animate({'background-color':'white'},2000);
+	</script>
+{% endif %}
 {% if num_links > 0 %}
-    <ul class="list-group">
+    <ul class="list-unstyled">
 	    {% for link in links %}
 	        {% include 'linkcat/link_inline.html' %}
 	    {% endfor %}

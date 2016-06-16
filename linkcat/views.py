@@ -85,6 +85,18 @@ class ModerationQueueView(ListView, GroupRequiredMixin):
 
 
 # ------------------------------- ajax stuff -----------------------------------
+def view_links(request, slug):
+    if request.is_ajax():
+        category = get_object_or_404(Category, slug=slug, status=0)
+        links = Link.objects.filter(category=category, status=0).order_by('order')
+        return render_to_response('linkcat/list_ajax.html',
+                                    {'links':links, 'num_links':len(links), 'category':category},
+                                    context_instance=RequestContext(request),
+                                    content_type="application/xhtml+xml"
+                                    )
+    else:
+        raise Http404
+
 def moderate_confirm_action(request, id, action):
     if request.is_ajax():
         # check rights to mmoderate
@@ -175,10 +187,9 @@ def add_link_process_form(request, slug):
                 else:
                     order = 10
                 # save link
-                Link.objects.create(url=url, name=name, description=description, category=category, status=link_status, posted_by=request.user, order=order, language=language)
-            print status
+                link = Link.objects.create(url=url, name=name, description=description, category=category, status=link_status, posted_by=request.user, order=order, language=language)
             return render_to_response('linkcat/add_link_success_message.html',
-                        {'message':msg, 'status':status, 'category':category},
+                        {'message':msg, 'status':status, 'link':link, 'category':category},
                         context_instance=RequestContext(request),
                         content_type="application/xhtml+xml"
                         )

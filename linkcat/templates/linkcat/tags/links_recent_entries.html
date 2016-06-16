@@ -6,7 +6,7 @@
 		<li class="list-group-item">
 		    	<a href="{{ link.url }}">{{ link.name }}</a> {{ link.description }}
 		    	<div style="font-size:85%;">
-			{% trans 'By' %} <span style="font-weight:bold">{{ user.username }}</span>
+			{% trans 'By' %} <span style="font-weight:bold">{{ link.posted_by }}</span>
 			{% trans 'Posted' %} {{ link.date|timesince }} {% trans 'ago' %}
 			</div>
 		</li>

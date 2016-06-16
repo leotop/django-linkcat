@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-06-10 13:41+0000\n"
+"POT-Creation-Date: 2016-06-16 12:08+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -78,16 +78,6 @@ msgstr "Liens"
 msgid "Save"
 msgstr "Enregistrer"
 
-#: templates/linkcat/add_link_success_message.html:7
-msgid "Ok, reload"
-msgstr "Ok, recharger"
-
-#: templates/linkcat/add_link_success_message.html:9
-#: templates/linkcat/add_link_success_message.html:11
-#: templates/linkcat/moderation/link_moderated.html:2
-msgid "Ok"
-msgstr "Ok"
-
 #: templates/linkcat/index.html:12 templates/linkcat/listcat.html:15
 #: templates/linkcat/listcat.html:21
 msgid "links"
@@ -102,7 +92,7 @@ msgstr "File de modération"
 msgid "There are no categories yet"
 msgstr "Il n'y a pas encore de catégories"
 
-#: templates/linkcat/list_ajax.html:9 templates/linkcat/listcat.html:77
+#: templates/linkcat/list_ajax.html:16 templates/linkcat/listcat.html:77
 msgid "No links yet"
 msgstr "Pas encore de liens"
 
@@ -123,6 +113,10 @@ msgstr "Rejetter le lien"
 #| msgid "Add link"
 msgid "Accept link"
 msgstr "Ajouter un lien"
+
+#: templates/linkcat/moderation/link_moderated.html:2
+msgid "Ok"
+msgstr "Ok"
 
 #: templates/linkcat/moderation/moderate_link_confirm.html:3
 #: templates/linkcat/moderation/moderate_link_confirm.html:6
@@ -155,35 +149,38 @@ msgstr "liens à modérer"
 msgid "Nothing to moderate"
 msgstr "Rien à modérer"
 
-#: templates/linkcat/tags/links_recent_entries.html:11
+#: templates/linkcat/tags/links_recent_entries.html:9
 msgid "By"
 msgstr "Par"
 
-#: templates/linkcat/tags/links_recent_entries.html:12
+#: templates/linkcat/tags/links_recent_entries.html:10
 #, fuzzy
 #| msgid "Posted by"
 msgid "Posted"
 msgstr "Posté par"
 
-#: templates/linkcat/tags/links_recent_entries.html:12
+#: templates/linkcat/tags/links_recent_entries.html:10
 msgid "ago"
 msgstr ""
 
-#: views.py:155
+#: views.py:167
 msgid "Please provide a valid url"
 msgstr "Merci de fournir une url valide"
 
-#: views.py:158
+#: views.py:170
 msgid "Please provide a name for the link"
 msgstr "Merci de fournir un nom pour ce lien"
 
-#: views.py:166
+#: views.py:178
 msgid "Link posted"
 msgstr "Lien posté"
 
-#: views.py:169
+#: views.py:181
 msgid "Link saved for moderation. Thank you for your participation"
 msgstr "Lien enregistré pour modération. Merci de votre participation"
+
+#~ msgid "Ok, reload"
+#~ msgstr "Ok, recharger"
 
 #~ msgid "Home"
 #~ msgstr "Accueil"
