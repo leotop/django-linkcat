@@ -5,9 +5,7 @@
 		<a href="{% url 'links-category-list' category.slug %}">
 		{% if category.image %}
 			<div style="min-width:130px;min-height:130px;" class="gf">
-				{% thumbnail category.image "130x130" format="PNG" as img %}
-					<img src="{{ img.url }}" alt="" style="margin:{{ img|margin:"130x130" }}" />
-				{% endthumbnail %}
+				<img class="img-responsive" src="{{ category.image|thumbnail_url:'cat_title' }}" alt=""/>
 			</div>
 		{% elif category.icon %}
 			<div style="min-width:130px;min-height:130px;font-size:700%" class="gf">

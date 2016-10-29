@@ -2,6 +2,7 @@
 
 from django.conf import settings
 from django.contrib import admin
+from mptt.admin import MPTTModelAdmin
 from linkcat.models import Link, LinksCategory
 
 
@@ -22,13 +23,14 @@ class LinkAdmin(admin.ModelAdmin):
 
 
 @admin.register(LinksCategory)
-class LinksCategoryAdmin(admin.ModelAdmin):
+class LinksCategoryAdmin(MPTTModelAdmin):
     date_hierarchy = 'edited'
     fields = ['name', 'slug', 'parent', 'description', 'image', 'icon', 'status', 'order']
     list_display = ['name', 'parent', 'created', 'edited', 'status']
     list_select_related = ['editor', 'parent']
     search_fields = ['name', 'editor__username']
     prepopulated_fields = {"slug": ("name",)}
+    mptt_level_indent = 25
     
     def save_model(self, request, obj, form, change):
         obj.editor = obj.posted_by = request.user

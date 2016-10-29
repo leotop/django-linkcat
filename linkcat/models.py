@@ -14,7 +14,6 @@ class LinksCategory(MPTTModel, MetaBaseModel, MetaBaseNameModel, MetaBaseStatusM
     icon = models.CharField(max_length=60, blank=True, verbose_name=_(u'Icon'), help_text=_(u'Name of a font awesome icon: ex: "pencil"'))
     description = models.TextField(blank=True, verbose_name=_(u'Description'))
     
-    
     class Meta:
         verbose_name=_(u'Category')
         verbose_name_plural = _(u'Categories')
@@ -22,6 +21,9 @@ class LinksCategory(MPTTModel, MetaBaseModel, MetaBaseNameModel, MetaBaseStatusM
 
     def __unicode__(self):
         return unicode(self.name)
+    
+    def get_absolute_url(self):
+        return reverse('links-category-list', kwargs={'slug':self.slug})
 
 
 class Link(MetaBaseModel, MetaBaseStatusModel, MetaBasePostedByModel, MetaBaseOrderedModel, MetaBaseDateModel):
