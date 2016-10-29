@@ -4,7 +4,7 @@ from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator
 from django.http.response import Http404
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import get_object_or_404, render_to_response
+from django.shortcuts import get_object_or_404, render
 from django.views.generic import TemplateView, ListView, CreateView
 from django.template import RequestContext
 from django.views.generic.edit import FormView
@@ -89,9 +89,8 @@ def view_links(request, slug):
     if request.is_ajax():
         category = get_object_or_404(Category, slug=slug, status=0)
         links = Link.objects.filter(category=category, status=0).order_by('order')
-        return render_to_response('linkcat/list_ajax.html',
+        return render(request, 'linkcat/list_ajax.html',
                                     {'links':links, 'num_links':len(links), 'category':category},
-                                    context_instance=RequestContext(request),
                                     content_type="application/xhtml+xml"
                                     )
     else:
@@ -103,9 +102,8 @@ def moderate_confirm_action(request, id, action):
         is_modo = is_moderator(request.user)
         if is_modo is False:
             return HttpResponse('')
-        return render_to_response('linkcat/moderation/moderate_link_confirm.html',
+        return render(request, 'linkcat/moderation/moderate_link_confirm.html',
                                     {'id':id, 'action':action},
-                                    context_instance=RequestContext(request),
                                     content_type="application/xhtml+xml"
                                     )
     else:
@@ -128,9 +126,8 @@ def moderate_link(request, id, action):
             link.save()
         elif action == 'reject':
             link.delete()
-        return render_to_response('linkcat/moderation/link_moderated.html',
+        return render(request, 'linkcat/moderation/link_moderated.html',
                                   {'id':id},
-                                    context_instance=RequestContext(request),
                                     content_type="application/xhtml+xml"
                                     )
     else:
@@ -140,9 +137,8 @@ def moderate_link(request, id, action):
 def add_link_form(request, slug):
     category = get_object_or_404(Category, slug=slug, status=0)
     if request.is_ajax():
-        return render_to_response('linkcat/add_link_form.html',
+        return render(request, 'linkcat/add_link_form.html',
                                     {'form': AddLinkForm(), 'category':category},
-                                    context_instance=RequestContext(request),
                                     content_type="application/xhtml+xml"
                                     )
     else:
@@ -188,9 +184,8 @@ def add_link_process_form(request, slug):
                     order = 10
                 # save link
                 link = Link.objects.create(url=url, name=name, description=description, category=category, status=link_status, posted_by=request.user, order=order, language=language)
-            return render_to_response('linkcat/add_link_success_message.html',
+            return render(request, 'linkcat/add_link_success_message.html',
                         {'message':msg, 'status':status, 'link':link, 'category':category},
-                        context_instance=RequestContext(request),
                         content_type="application/xhtml+xml"
                         )
         else:

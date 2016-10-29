@@ -1,0 +1,7 @@
+{% load i18n %}
+<div id="num_links" class="label label-info hidden-xxs">
+	{% if is_moderator %}
+		<a href="{% if not edit_mode %}?edit_mode=1{% else %}.{% endif %}"><i class="fa fa-pencil"></i></a>&nbsp;
+	{% endif %}
+	{{ num_links }} {% trans "links" %}
+</div>

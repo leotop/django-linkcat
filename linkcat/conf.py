@@ -14,5 +14,7 @@ languages = (
              )
 
 LANGUAGES = getattr(settings, 'LINKCAT_LANGUAGES', languages)
-DEFAULT_LANGUAGE = LANGUAGES[0][0]
+default_lang = LANGUAGES[0][0]
+DEFAULT_LANGUAGE = getattr(settings, 'LINKCAT_DEFAULT_LANGUAGE', default_lang)
+
 

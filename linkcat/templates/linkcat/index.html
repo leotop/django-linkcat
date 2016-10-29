@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n staticfiles %}
+{% load i18n staticfiles i18n %}
 
 {% block extra_head %}
 	<link rel="stylesheet" media="screen, projection" href="{% static 'linkcat/linkcat.css' %}" />
@@ -8,11 +8,9 @@
 {% block title %}{% trans 'Links catalog' %}{% endblock title %}
 
 {% block breadcrumbs %}
-	<div class="pull-right label label-info hidden-xxs grs">
-		{{ num_links }} {% trans 'links' %}
-	</div>
 	{% with current_category as category %}
 		{% include 'linkcat/breadcrumbs.html' %}
+		{% include 'linkcat/num_links.html' %}
 	{% endwith %}
 {% endblock %}
 			
