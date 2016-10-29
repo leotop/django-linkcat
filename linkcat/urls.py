@@ -1,4 +1,4 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 from linkcat.views import LinksAndCategoriesView, LinksHomeView, switch_links_order, add_link_form, add_link_process_form, ModerationQueueView, moderate_confirm_action, moderate_link, view_links  
 
 
